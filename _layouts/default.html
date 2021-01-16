@@ -5,9 +5,10 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>{{ page.title }}</title>
         <link rel="stylesheet" href="/assets/css/bulma.dark.min.css">
-		<link rel="icon" href="favicon.ico" sizes="any" type="image/ico">
+        <link rel="icon" href="/favicon.ico" sizes="any" type="image/ico">
     </head>
     <body>
+        {% include navigation.html %}
         {{ content }}
     </body>
 </html>

@@ -1,8 +1,6 @@
 ---
 ---
 
-## State Machines
-
 When coding the player entity for the _Oracle of Love_ engine, I ran into a wall trying to figure out the best way to handle 
 all the different player states. If you never played _Links Awakening_ or any of the _Oracle_ games, here is a high level list of what the player can do.
 
@@ -42,6 +40,8 @@ Before I go into this, I would like to credit [another Zelda recreation project]
 
 ## Setting up the State Machines  
 The basic idea is to split up your state machines. Instead of having a state machine to control the player as whole, create state machines for different aspects of the player.  
+
+**Post still a WIP**
 {% raw %}
 
 {% endraw %}
