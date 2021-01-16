@@ -43,5 +43,6 @@ Before I go into this, I would like to credit [another Zelda recreation project]
 ## Setting up the State Machines  
 The basic idea is to split up your state machines. Instead of having a state machine to control the player as whole, create state machines for different aspects of the player.  
 {% raw %}
+
 {% endraw %}
 ![Basic StateMachine](/assets/images/player_state_update_high_level.png)    
