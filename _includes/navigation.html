@@ -4,36 +4,11 @@
             <a class="navbar-item" href="{{% link index.html %}}">
                 <img src="/assets/images/hero.png">
             </a>
-            <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navigationBar">
-                <span aria-hidden="true"></span>
-                <span aria-hidden="true"></span>
-                <span aria-hidden="true"></span>
-            </a>
-        </div>
-        <div id="navigationBar" class="navbar-menu">
-            <div class="navbar-start">
-                {% for item in site.data.navigation %}
-                    <a class="navbar-item{% if page.url == item.link %} is-active{% endif %}" href="{{item.link}}" >
-                        {{item.name}}
-                    </a>
-                {% endfor %}
-            </div>
+            {% for item in site.data.navigation %}
+                <a class="navbar-item{% if page.url == item.link %} is-active{% endif %}" href="{{item.link}}" >
+                    {{item.name}}
+                </a>
+            {% endfor %}
         </div>
     </div>
-
 </nav>
-<script>
-    document.addEventListener('DOMContentLoaded', function(){
-        var $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
-        if ($navbarBurgers.length > 0){
-            $navbarBurgers.forEach(function(elem){
-                elem.addEventListener('click', function(){
-                    var target = elem.dataset.target;
-                    var $target = document.getElementById(target);
-                    elem.classList.toggle('is-active');
-                    $target.classList.toggle('is-active');
-                });
-            });
-        }
-    });
-</script>
