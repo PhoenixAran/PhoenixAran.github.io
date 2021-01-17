@@ -1,5 +1,7 @@
 ---
 ---
+In this post I'll be documenting how I implemented the player controller in [Oracle of Love](https://github.com/PhoenixAran/LoveOracle). This is more to cement my own understanding of it so it will probably be confusing and abstract to other readers. You have been warned before you read this wall of text.
+
 When coding the player entity for the _Oracle of Love_ engine, I ran into a wall trying to figure out the best way to handle 
 all the different player states. If you never played _Links Awakening_ or any of the _Oracle_ games, here is a high level list of what the player can do.
 
@@ -22,7 +24,7 @@ However, a tradtional state machine did not work out in actual practice. Here ar
 ### Concurrent States
 The amount of _states_ that exist for the player in the Gameboy Zelda games is actually pretty complex. 
 I would even go as far as to say that is is more complex than recreating the player code in _Link to the Past_. 
-The difference between the _Links Awakening/Oracle_ player and the _Link to the Past_ player? The ability to jump.
+The difference between the two? The ability to jump.
 
 Jumping introduces alot of complexity when programming a player controller. If you were to keep using a traditional state machine approach, you would have to _double_
 the amount of state objects to implement. _Sword Swing_ would become _Sword Swing_ and _Jump Sword Swing_.
@@ -57,22 +59,151 @@ func init():
     environmentStateMachine = StateMachine(self)
     playerMovementController = PlayerMovementController(self)
     ...
-</pre>
 ~~~
 _Player entity pseudo code_
 
-The diagram below will outline the what goes on in **Player::update()** each frame.
+The diagram below will outline the what goes on in **Player::update()** each frame. I will also provide explanations for what each step in the flowchart does.
 
 ![Basic StateMachine](/assets/images/player_state_update_high_level.png)  
 _Update process for the player entity_  
 
-#### Request Natural State and Updating Movement Values
+### Request Natural State and Updating Movement Values
 When we request the player's natural state, we are asking the following questions:
 * Is the player in the air?
 * Is the player in high grass
 * Is the player in water
-* ... etc.
-Once we find out where the player is in the environment, we retrieve the corresponding environent state object. Environment state objects just adjust player movement
+* ... etc.  
+  
+Once we find out where the player is in the environment, we retrieve the corresponding environment state object. Environment state objects just adjust player movement
 values when it is active. For example, if a player is on ice, the _Ice Environment State_ will just make the player's movement more slippery.
 
-#### Get Move Controls
+
+### Integrate State Parameters
+The player entity will have one instance of the _Player State Parameter_ struct. 
+
+~~~
+class PlayerStateParameters
+
+var canJump = true
+var canWarp = true
+var canLedgeJump = true
+var canControlOnGround = true
+var canControlInAir = true
+var canPush = true
+var canUseWeapons = true
+var canStrafe = true
+var defaultAnimationWhileStill = true
+
+var alwaysFaceUp = false
+var alwaysFaceDown = false
+var alwaysFaceLeft = false
+var alwaysFaceRight = false
+
+var animations = {
+    'swing' = nil,
+    'swingNoLunge' = nil,
+    'swingBig' = nil,
+    'spin' = nil,
+    'stab' =  nil,
+    'aim' = nil,
+    'throw' - nil,
+    'default' = nil,
+    'move' = nil,
+    'carry' = nil,
+    'count' = nil
+}
+~~~
+
+Each state will have their own configuration for State Parameters. When we _integrate_ state parameters, we run a routine inside the Player entity
+that looks like this:
+
+~~~
+class Player extends MapEntity
+
+func integrateStateParameters():
+    self.stateParameters = PlayerStateParameters()
+    // declare your default state parameter values
+    self.stateParameters.animations.default = 'idle'
+    ...
+    for stateMachine in self.conditionStateMachines:
+        if stateMachine.isActive():
+            self.stateParameters.integrateStateParmeters(stateMachine.getStateParameters())
+    self.stateParameters.integrateStateParameters(self.environmentStateMachine.getStateParameters())
+    self.stateParameters.integrateStateParameters(self.controlStateMachine.getStateParameters())
+    self.stateParameters.integrateStateParameters(self.weaponStateMachine.getStateParameters())
+~~~
+
+**PlayerStateParameters::integrateStateParameters** is a function that combines state parameter values from another instance of PlayerStateParameter struct.  
+It will run compare itself with the other instance, and set it's own flags depending on the values in the other struct. For example, if we integrate a PlayerStateParameter struct with the flag _canMove_ as false, it will set it's own flag _canMove_ to false as well.  It will also override it's own animation declarations with the instance it is integrating with.  
+
+~~~
+class PlayerStateParameters
+
+func prioritizeFalse(a : bool, b : bool):
+    if not a then return false
+    if not b then return false
+    return true
+
+func integrateStateParameters(other : PlayerStateParameters):
+    // for player actions, we want to prioritize restrictions
+    self.canJump = prioritizeFalse(self.canJump, other.canJump)
+    self.canWarp = prioritizeFalse(self.canWarp, other.canWarp)
+    ...
+
+    // prefer true for clamping animation directions
+    self.alwaysFaceUp = self.alwaysFaceUp or other.alwaysFaceUp
+    self.alwaysFaceDown = self.alwaysFaceDown or other.alwaysFaceDown
+    
+    // prefer the other animations if they are not null
+    for keyValuePair in other.animations:
+        var key = keyValuePair.key
+        self.animations[key] = keyValuePair.value or self.animations[key]
+~~~
+
+This part is a little confusing but to sum it up, integrating state parameters is determining what the player is allowed to do by combining the constrictions defined by
+each active Player state. So if the active weapon state says that "the player cannot move when it is in use", that rule will set the flag _canMove_ to false which the 
+PlayerMotionController will then have to respect.
+
+
+### Get Move Controls
+This is when the movement controller will intrepret movement controls from the player based on the Player's PlayerStateParameter struct instance. If 
+player is allowed to move, the movement controller will set motion values in the physics component to declare how the player will move.  
+
+### Choose Animations
+Pick what animation to play based on what the player is currently doing and which direction they are facing. 
+
+### Check pressed buttons callbacks
+One pretty cool thing about this player controller implementation is that it allows for dynamic callbacks to be used for each individual buttons. Here is what it looks
+like when we button callbacks are assigned.
+
+~~~
+addPressInteraction('x', func(player):
+    // when the player requests the natural state, it will be in the air
+    // therefore making the JumpState the active Environment State
+    movementController.jump()       
+)
+
+addPressInteraction('x', func(player):
+    // attempt to read sign / talk to NPC
+    player.interact()
+)
+
+addPressInteraction('b', func(player):
+    player.actionUseWeapon('b')
+)
+~~~
+
+These callbacks get looped through depending if their coresponding button is pressed. 
+
+### Move Player
+Move your player within your physics system.
+
+### Update Equipped Items
+Items in my engine are their own entities whose update and draw methods get called by their owner entity. Update them in this step.
+
+### Update Other Components
+Update the other components that the Player owns. 
+
+## The Result
+After implementing the controller this way, the result was slightly less confusing code. But the benefit was that the ugly code is only in once place compared to
+writing confusing code in multiple monolithic state objects.  
