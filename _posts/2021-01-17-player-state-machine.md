@@ -205,5 +205,5 @@ Items in my engine are their own entities whose update and draw methods get call
 Update the other components that the Player owns. 
 
 ## The Result
-After implementing the controller this way, the result was slightly less confusing code. But the benefit was that the ugly code is only in once place compared to
+After implementing the controller this way, the result was slightly less confusing code. But the benefit was that the ugly code is only in a couple of places compared to
 writing confusing code in multiple monolithic state objects.  
