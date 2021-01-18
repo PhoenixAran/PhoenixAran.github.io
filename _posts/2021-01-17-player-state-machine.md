@@ -43,22 +43,24 @@ Before I go into this, I would like to credit [this Zelda recreation project](ht
 The basic idea is to split up your state machines. Instead of having a state machine to control the player as whole, create state machines for different aspects of the player.
 
 ~~~ 
-class Player extends MapEntity
+class Player extends MapEntity {
+    // To handle movement and pick movement animation
+    var playerMovementController
+    // State Machines for the player
+    var environmentStateMachine
+    var controlStateMachine
+    var weaponStateMachine
+    var conditionStateMachines = []
+    // Player State Parameters that get mutated by each active state
+    var stateParameters = PlayerStateParameters()
 
-// To handle movement and pick movement animation
-var playerMovementController
-// State Machines for the player
-var environmentStateMachine
-var controlStateMachine
-var weaponStateMachine
-var conditionStateMachines = []
-// Player State Parameters that get mutated by each active state
-var stateParameters = PlayerStateParameters()
+    function init() {
+        environmentStateMachine = StateMachine(self)
+        playerMovementController = PlayerMovementController(self)
+        ...
 
-func init():
-    environmentStateMachine = StateMachine(self)
-    playerMovementController = PlayerMovementController(self)
-    ...
+    }
+}
 ~~~
 _Player entity pseudo code_
 
@@ -82,35 +84,36 @@ values when it is active. For example, if a player is on ice, the _Ice Environme
 The player entity will have one instance of the _Player State Parameter_ struct. 
 
 ~~~
-class PlayerStateParameters
+class PlayerStateParameters {
 
-var canJump = true
-var canWarp = true
-var canLedgeJump = true
-var canControlOnGround = true
-var canControlInAir = true
-var canPush = true
-var canUseWeapons = true
-var canStrafe = true
-var defaultAnimationWhileStill = true
+    var canJump = true;
+    var canWarp = true;
+    var canLedgeJump = true;
+    var canControlOnGround = true;
+    var canControlInAir = true;
+    var canPush = true;
+    var canUseWeapons = true;
+    var canStrafe = true;
+    var defaultAnimationWhileStill = true;
 
-var alwaysFaceUp = false
-var alwaysFaceDown = false
-var alwaysFaceLeft = false
-var alwaysFaceRight = false
+    var alwaysFaceUp = false;
+    var alwaysFaceDown = false;
+    var alwaysFaceLeft = false;
+    var alwaysFaceRight = false;
 
-var animations = {
-    'swing' = nil,
-    'swingNoLunge' = nil,
-    'swingBig' = nil,
-    'spin' = nil,
-    'stab' =  nil,
-    'aim' = nil,
-    'throw' - nil,
-    'default' = nil,
-    'move' = nil,
-    'carry' = nil,
-    'count' = nil
+    var animations = {
+        'swing' = nil,
+        'swingNoLunge' = nil,
+        'swingBig' = nil,
+        'spin' = nil,
+        'stab' =  nil,
+        'aim' = nil,
+        'throw' - nil,
+        'default' = nil,
+        'move' = nil,
+        'carry' = nil,
+        'count' = nil
+    };
 }
 ~~~
 
@@ -118,46 +121,53 @@ Each state will have their own configuration for State Parameters. When we _inte
 that looks like this:
 
 ~~~
-class Player extends MapEntity
+class Player extends MapEntity {
 
-func integrateStateParameters():
-    self.stateParameters = PlayerStateParameters()
-    // declare your default state parameter values
-    self.stateParameters.animations.default = 'idle'
-    ...
-    for stateMachine in self.conditionStateMachines:
-        if stateMachine.isActive():
-            self.stateParameters.integrateStateParmeters(stateMachine.getStateParameters())
-    self.stateParameters.integrateStateParameters(self.environmentStateMachine.getStateParameters())
-    self.stateParameters.integrateStateParameters(self.controlStateMachine.getStateParameters())
-    self.stateParameters.integrateStateParameters(self.weaponStateMachine.getStateParameters())
+    function integrateStateParameters() {
+        self.stateParameters = PlayerStateParameters();
+        // declare your default state parameter values
+        self.stateParameters.animations.default = 'idle';
+        ...
+        foreach(var stateMachine in self.conditionStateMachines) {
+            if (stateMachine.isActive())
+                self.stateParameters.integrateStateParmeters(stateMachine.getStateParameters());
+        }
+        self.stateParameters.integrateStateParameters(self.environmentStateMachine.getStateParameters());
+        self.stateParameters.integrateStateParameters(self.controlStateMachine.getStateParameters());
+        self.stateParameters.integrateStateParameters(self.weaponStateMachine.getStateParameters());
+    }
+}
 ~~~
 
 **PlayerStateParameters::integrateStateParameters** is a function that combines state parameter values from another instance of PlayerStateParameter struct.  
 It will run compare itself with the other instance, and set it's own flags depending on the values in the other struct. For example, if we integrate a PlayerStateParameter struct with the flag _canMove_ as false, it will set it's own flag _canMove_ to false as well.  It will also override it's own animation declarations with the instance it is integrating with.  
 
 ~~~
-class PlayerStateParameters
+class PlayerStateParameters {
 
-func prioritizeFalse(a : bool, b : bool):
-    if not a then return false
-    if not b then return false
-    return true
+    function prioritizeFalse(a : bool, b : bool) {
+        if (!a) { return false; }
+        if (!b) { return false; }
+        return true;
+    }
 
-func integrateStateParameters(other : PlayerStateParameters):
-    // for player actions, we want to prioritize restrictions
-    self.canJump = prioritizeFalse(self.canJump, other.canJump)
-    self.canWarp = prioritizeFalse(self.canWarp, other.canWarp)
-    ...
+    function integrateStateParameters(other : PlayerStateParameters) {
+        // for player actions, we want to prioritize restrictions
+        self.canJump = prioritizeFalse(self.canJump, other.canJump);
+        self.canWarp = prioritizeFalse(self.canWarp, other.canWarp);
+        ...
 
-    // prefer true for clamping animation directions
-    self.alwaysFaceUp = self.alwaysFaceUp or other.alwaysFaceUp
-    self.alwaysFaceDown = self.alwaysFaceDown or other.alwaysFaceDown
-    
-    // prefer the other animations if they are not null
-    for keyValuePair in other.animations:
-        var key = keyValuePair.key
-        self.animations[key] = keyValuePair.value or self.animations[key]
+        // prefer true for clamping animation directions
+        self.alwaysFaceUp = self.alwaysFaceUp || other.alwaysFaceUp;
+        self.alwaysFaceDown = self.alwaysFaceDown || other.alwaysFaceDown;
+        
+        // prefer the other animations if they are not null
+        foreach(keyValuePair in other.animations) {
+            var key = keyValuePair.key;
+            self.animations[key] = keyValuePair.value or self.animations[key];
+        }
+    }
+}
 ~~~
 
 This part is a little confusing but to sum it up, integrating state parameters is determining what the player is allowed to do by combining the constrictions defined by
@@ -177,20 +187,20 @@ One pretty cool thing about this player controller implementation is that it all
 like when we button callbacks are assigned.
 
 ~~~
-addPressInteraction('x', func(player):
+addPressInteraction('x', function(player) {
     // when the player requests the natural state, it will be in the air
     // therefore making the JumpState the active Environment State
-    movementController.jump()       
-)
+    movementController.jump();   
+});
 
-addPressInteraction('x', func(player):
+addPressInteraction('x', function(player) {
     // attempt to read sign / talk to NPC
-    player.interact()
-)
+    player.interact();
+});
 
-addPressInteraction('b', func(player):
-    player.actionUseWeapon('b')
-)
+addPressInteraction('b', function(player) {
+    player.actionUseWeapon('b');
+});
 ~~~
 
 These callbacks get looped through depending if their coresponding button is pressed. 
@@ -202,8 +212,7 @@ Move your player within your physics system.
 Items in my engine are their own entities whose update and draw methods get called by their owner entity. Update them in this step.
 
 ### Update Other Components
-Update the other components that the Player owns. 
+Update the other components like the sprite component, or combat component.
 
 ## The Result
-After implementing the controller this way, the result was slightly less confusing code. But the benefit was that the ugly code is only in a couple of places compared to
-writing confusing code in multiple monolithic state objects.  
+After implementing the controller this way, the result was slightly less confusing code. But the benefit was that the ugly code is only in a couple of places instead of inside multiple monolithic state objects.  
