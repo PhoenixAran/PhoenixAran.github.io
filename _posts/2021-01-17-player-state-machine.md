@@ -1,6 +1,6 @@
 ---
 ---
-In this post I'll be documenting how I implemented the player controller in [Oracle of Love](https://github.com/PhoenixAran/LoveOracle). This is more to cement my own understanding of it so it will probably be confusing and abstract to other readers. You have been warned before you read this wall of text.
+In this post I'll be documenting how I implemented the player controller in [Oracle of Love](https://github.com/PhoenixAran/LoveOracle){:target="_blank"}. This is more to cement my own understanding of it so it will probably be confusing and abstract to other readers. You have been warned before you read this wall of text.
 
 When coding the player entity for the _Oracle of Love_ engine, I ran into a wall trying to figure out the best way to handle 
 all the different player states. If you never played _Links Awakening_ or any of the _Oracle_ games, here is a high level list of what the player can do.
@@ -37,7 +37,7 @@ Choosing animations is a nightmare. To refer back to the problem above for the _
 This is not to say it can't be done. Im pretty certain it could be if you're smart (unlike myself), but I could not figure it out. 
 
 ## Alternative Approach to Using State Machines
-Before I go into this, I would like to credit [this Zelda recreation project](https://github.com/trigger-segfault/ZeldaOracle) for the original implementation. I borrowed some of their player code and adapted it to my engine, so I think I have an okay understanding of how it works.    
+Before I go into this, I would like to credit [this Zelda recreation project](https://github.com/trigger-segfault/ZeldaOracle){:target="_blank"} for the original implementation. I borrowed some of their player code and adapted it to my engine, so I think I have an okay understanding of how it works.    
 
 ## Setting up the State Machines  
 The basic idea is to split up your state machines. Instead of having a state machine to control the player as whole, create state machines for different aspects of the player.
@@ -45,18 +45,18 @@ The basic idea is to split up your state machines. Instead of having a state mac
 ~~~ 
 class Player extends MapEntity {
     // To handle movement and pick movement animation
-    var playerMovementController
+    var playerMovementController;
     // State Machines for the player
-    var environmentStateMachine
-    var controlStateMachine
-    var weaponStateMachine
-    var conditionStateMachines = []
+    var environmentStateMachine;
+    var controlStateMachine;
+    var weaponStateMachine;
+    var conditionStateMachines = [];
     // Player State Parameters that get mutated by each active state
-    var stateParameters = PlayerStateParameters()
+    var stateParameters = PlayerStateParameters();
 
     function init() {
-        environmentStateMachine = StateMachine(self)
-        playerMovementController = PlayerMovementController(self)
+        environmentStateMachine = StateMachine(self);
+        playerMovementController = PlayerMovementController(self);
         ...
 
     }
@@ -183,8 +183,8 @@ player is allowed to move, the movement controller will set motion values in the
 Pick what animation to play based on what the player is currently doing and which direction they are facing. 
 
 ### Check pressed buttons callbacks
-One pretty cool thing about this player controller implementation is that it allows for dynamic callbacks to be used for each individual buttons. Here is what it looks
-like when we button callbacks are assigned.
+One pretty cool thing about this player controller implementation is that it allows for dynamic callbacks to be used for each individual button. Here is what it looks
+like when we configure controls any button that is not the dpad / left joystick.
 
 ~~~
 addPressInteraction('x', function(player) {
