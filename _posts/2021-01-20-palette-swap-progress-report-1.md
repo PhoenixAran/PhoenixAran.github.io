@@ -6,8 +6,26 @@
 Got some basic palette swapping to work. What you're seeing here is not an image swap, I'm actually using a fragment shader to swap 
 the default green to either blue or red. 
 
-Credits to [https://github.com/thomasgoldstein/zabuyaki](https://github.com/thomasgoldstein/zabuyaki){:target="_blank"} (very fun open source game FYI) for this shader. It took me a while to find it so hopefully when someone else googles "Love2D Palette Swap" they can find this post!
-{% raw %}
+Credits to [https://github.com/thomasgoldstein/zabuyaki](https://github.com/thomasgoldstein/zabuyaki){:target="_blank"} for this shader.  
+
+~~~
+// just an example value for colorCount
+const int colorCount = 3; 
+uniform vec4 originalColors[colorCount];
+uniform vec4 alternateColors[colorCount];
+
+vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords) {
+  // This is the current pixel color
+  vec4 pixel = Texel(texture, texture_coords);
+  for (int i = 0; i < colorCount; ++i){
+    if (pixel == originalColors[i]) {
+      return alternateColors[i] * color;
+    }
+  }
+  return pixel * color;
+}
+~~~  
+Here is how I generate palette swap shaders given two color tables.
 ~~~
 local lume = require 'lume'
 local function makePaletteShader(originalColors, alternateColors)
@@ -44,7 +62,6 @@ local function makePaletteShader(originalColors, alternateColors)
     end
   end
 ~~~
-{% endraw %}
 
 In the future I plan on making palettes for tilesets as well. This will save time and memory since I won't have to create seperate images if I want a different
 color palette for certain sprites. 

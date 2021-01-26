@@ -180,7 +180,7 @@ This is when the movement controller will intrepret movement controls from the p
 player is allowed to move, the movement controller will set motion values in the physics component to declare how the player will move.  
 
 ### Choose Animations
-Pick what animation to play based on what the player is currently doing and which direction they are facing. 
+Pick what animation to play based on what the player is currently doing and which direction they are facing. In most situations you use the animations dictionary inside _PlayerStateParameters._ 
 
 ### Check pressed buttons callbacks
 One pretty cool thing about this player controller implementation is that it allows for dynamic callbacks to be used for each individual button. Here is what it looks
