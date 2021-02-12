@@ -217,4 +217,4 @@ Items in my engine are their own entities whose update and draw methods get call
 Update the other components like the sprite component, or combat component.
 
 ## The Result
-After implementing the controller this way, the result was slightly less confusing code. I guess that's a win?
+Coding the player controller this way made implementing concurrent states alot more managable. 
