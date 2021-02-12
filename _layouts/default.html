@@ -6,9 +6,28 @@
         <title>{{ page.title }}</title>
         <link rel="stylesheet" href="/assets/css/bulma.dark.min.css">
         <link rel="icon" href="/favicon.ico" sizes="any" type="image/ico">
+        <style>
+            html,
+            body {
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+            }
+            body > footer {
+                margin-top: auto;
+            }
+        </style>
     </head>
     <body>
         {% include navigation.html %}
         {{ content }}
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="content has-text-centered">
+            <p>
+                @2021
+            </p>
+            </div>
+        </footer>
     </body>
 </html>

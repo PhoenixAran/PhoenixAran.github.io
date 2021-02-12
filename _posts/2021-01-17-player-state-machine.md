@@ -72,9 +72,11 @@ _Update process for the player entity_
 ### Request Natural State and Updating Movement Values
 When we request the player's natural state, we are asking the following questions:
 * Is the player in the air?
-* Is the player in high grass
-* Is the player in water
-* ... etc.  
+* Is the player in high grass?
+* Is the player in water?  
+
+An so on...
+
   
 Once we find out where the player is in the environment, we retrieve the corresponding environment state object. Environment state objects just adjust player movement
 values when it is active. For example, if a player is on ice, the _Ice Environment State_ will just make the player's movement more slippery.
@@ -215,4 +217,4 @@ Items in my engine are their own entities whose update and draw methods get call
 Update the other components like the sprite component, or combat component.
 
 ## The Result
-After implementing the controller this way, the result was slightly less confusing code. But the benefit was that the ugly code is only in a couple of places instead of inside multiple monolithic state objects.  
+After implementing the controller this way, the result was slightly less confusing code. I guess that's a win?
