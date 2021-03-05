@@ -10,7 +10,7 @@ If you're making a game, I think its critical that you implement some sort of en
 This process is even worse if you're using a compiled language, which adds an extra step and wastes even more of your time.
 
 Here is how I expose properties for my Entity classes in lua.
-~~~
+{% highlight lua %}
 function Entity:getInspectorProperties()
   local props = InspectorProperties(self)
   -- expose a string variable that you dont want users to be editing
@@ -21,7 +21,7 @@ function Entity:getInspectorProperties()
   props:addVector2i('Size', self.getSize, self.resize)
   return props
 end
-~~~
+{% endhighlight %}
 
 ![Entity Inspector in game screenshot](/assets/images/entity_inspector.png)  
 

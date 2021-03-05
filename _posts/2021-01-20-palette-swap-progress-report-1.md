@@ -8,7 +8,7 @@ the default green to either blue or red.
 
 Credits to [https://github.com/thomasgoldstein/zabuyaki](https://github.com/thomasgoldstein/zabuyaki){:target="_blank"} for this shader.  
 
-~~~
+{% highlight glsl %}
 // just an example value for colorCount
 const int colorCount = 3; 
 uniform vec4 originalColors[colorCount];
@@ -24,12 +24,12 @@ vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords) 
   }
   return pixel * color;
 }
-~~~  
+{% endhighlight %}
 Here is how I generate palette swap shaders given two color tables.
-~~~
+{% highlight lua %}
 local lume = require 'lume'
 local function makePaletteShader(originalColors, alternateColors)
-  assert(#originalColors == lume.count(alternateColors), 'OriginalColors and AlternateColors array length need to match for palette shader')
+  assert(lume.count(originalColors) == lume.count(alternateColors), 'OriginalColors and AlternateColors array length need to match for palette shader')
   if #originalColors == 0 then return nil end
   local count = #originalColors
   local shaderCode = 'const int colorCount = ' .. tostring(count) .. ';'  -- ironic that this is const lol
@@ -61,7 +61,7 @@ local function makePaletteShader(originalColors, alternateColors)
       self.shader:sendColor('alternateColors', self.alternateColors[1], otherAlternateColors)
     end
   end
-~~~
+{% endhighlight %}
 
 In the future I plan on making palettes for tilesets as well. This will save time and memory since I won't have to create seperate images if I want a different
 color palette for certain sprites. 

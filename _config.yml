@@ -53,7 +53,8 @@ plugins:
 #   - vendor/gems/
 #   - vendor/ruby/
 exclude: ['readme.md']
-
+markdown: kramdown
+highlighter: rouge
 defaults:
   - scope:
       path: ""
