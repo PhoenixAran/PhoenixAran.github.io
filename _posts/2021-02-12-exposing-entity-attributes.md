@@ -23,7 +23,7 @@ function Entity:getInspectorProperties()
 end
 {% endhighlight %}
 
-![Entity Inspector in game screenshot](/assets/images/entity_inspector.png)  
+![Entity Inspector in game screenshot](/assets/images/entity_inspector_preview.png)  
 
 Pretty simple stuff. Even if the language I'm using supports reflection and attributes this is still my 
 go to method of exposing object values.
