@@ -1,6 +1,6 @@
 ---
 ---
-If you're making a game, I think its critical that you implement some sort of entity inspector as soon as possible. Having it makes debugging so much easier since you can change entity member values during runtime instead:
+If you're making a game, I think its critical that you implement some sort of entity inspector as soon as possible. Having it makes debugging so much easier since without it you would have to:
 
 * Make file change
 * Saving
@@ -9,7 +9,7 @@ If you're making a game, I think its critical that you implement some sort of en
 
 This process is even worse if you're using a compiled language, which adds an extra step and wastes even more of your time.
 
-Here is how I expose properties for my Entity classes in lua.
+Anyways, here is how I expose properties for my Entity classes in lua.
 {% highlight lua %}
 function Entity:getInspectorProperties()
   local props = InspectorProperties(self)
