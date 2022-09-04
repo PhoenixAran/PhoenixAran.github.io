@@ -4,32 +4,32 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>{{ page.title }}</title>
-        <link rel="stylesheet" href="/assets/css/bulma.dark.min.css">
+        <link rel="stylesheet" href="/assets/css/bulma.css">
         <link rel="stylesheet" href="/assets/css/syntax.css">
         <link rel="icon" href="/favicon.ico" sizes="any" type="image/ico">
         <style>
             html,
             body {
                 min-height: 100vh;
-            }
-            body > footer {
-                margin-top: auto;
+                background-color:#fafafa;
             }
             .content figure {
                 text-align:left;
+            }
+            .card {
+                height:100%;
             }
         </style>
     </head>
     <body>
         {% include navigation.html %}
-        {{ content }}
-        <!-- Footer -->
-        <footer class="footer">
-            <div class="content has-text-centered">
-            <p>
-                @2021
-            </p>
+        <div class="columns is-mobile is-centered">
+            <div class="column is-three-qurters-desktop is-three-quarters-tablet is-full-mobile box" style="margin-top:2%;">
+                {{ content }}
             </div>
-        </footer>
+        </div>
+        <!-- Footer -->
+        <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+        <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
     </body>
 </html>

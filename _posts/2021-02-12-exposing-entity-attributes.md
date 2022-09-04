@@ -2,8 +2,8 @@
 ---
 If you're making a game, I think its critical that you implement some sort of entity inspector as soon as possible. Having it makes debugging so much easier since without it you would have to:
 
-* Make file change
-* Saving
+* Make code changes
+* Save changes
 * Run game
 * Repeat until you accomplished whatever it is you were trying to do    
 
@@ -24,6 +24,3 @@ end
 {% endhighlight %}
 
 ![Entity Inspector in game screenshot](/assets/images/entity_inspector_preview.png)  
-
-Pretty simple stuff. Even if the language I'm using supports reflection and attributes this is still my 
-go to method of exposing object values.

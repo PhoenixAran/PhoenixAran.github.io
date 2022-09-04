@@ -32,7 +32,7 @@ local function makePaletteShader(originalColors, alternateColors)
   assert(lume.count(originalColors) == lume.count(alternateColors), 'OriginalColors and AlternateColors array length need to match for palette shader')
   if #originalColors == 0 then return nil end
   local count = #originalColors
-  local shaderCode = 'const int colorCount = ' .. tostring(count) .. ';'  -- ironic that this is const lol
+  local shaderCode = 'const int colorCount = ' .. tostring(count) .. ';'
   shaderCode = shaderCode .. [[
     uniform vec4 originalColors[colorCount];
     uniform vec4 alternateColors[colorCount];
@@ -62,7 +62,3 @@ local function makePaletteShader(originalColors, alternateColors)
     end
   end
 {% endhighlight %}
-
-In the future I plan on making palettes for tilesets as well. This will save time and memory since I won't have to create seperate images if I want a different
-color palette for certain sprites. 
-
