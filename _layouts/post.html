@@ -2,12 +2,8 @@
 layout: default
 ---
 <a href="/blog.html"><ion-icon name="chevron-back-outline"></ion-icon> Back</a>
-<section class="section">
-    <div class="container">
-        <h3 class="title">{{ page.title }}</h3>
-        <h4 class="subtitle">{{ page.date | date_to_string }}</h4>
-        <div class="content">
-            {{ content }}
-        </div>
-    </div>
-</section>
+<article>
+    <h3>{{ page.title }}</h3>
+    <h4>{{ page.date | date_to_string }}</h4>
+    {{ content }}
+</article>

@@ -1,7 +1,7 @@
 ---
 ---
 
-![Basic StateMachine](/assets/images/palette_swap.gif)  
+![Basic StateMachine](/assets/images/blog_images/palette_swap.gif)  
 
 Got some basic palette swapping to work. What you're seeing here is not an image swap, I'm actually using a fragment shader to swap 
 the default green to either blue or red. 

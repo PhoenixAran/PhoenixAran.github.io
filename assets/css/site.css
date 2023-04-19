@@ -1,0 +1,63 @@
+a {
+  color: #485fc7;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.navbar {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 10px 25px;
+  gap: 15px;
+
+  background: rgb(30,87,153);
+  background: -moz-linear-gradient(top,  rgba(30,87,153,1) 0%, rgba(41,137,216,1) 50%, rgba(32,124,202,1) 51%, rgba(125,185,232,1) 100%);
+  background: -webkit-linear-gradient(top,  rgba(30,87,153,1) 0%,rgba(41,137,216,1) 50%,rgba(32,124,202,1) 51%,rgba(125,185,232,1) 100%);
+  background: linear-gradient(to bottom,  rgba(30,87,153,1) 0%,rgba(41,137,216,1) 50%,rgba(32,124,202,1) 51%,rgba(125,185,232,1) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1e5799', endColorstr='#7db9e8',GradientType=0 );
+  
+}
+
+.navlink {
+  display:flex;
+  flex-direction:row;
+  align-items:flex-start;
+  gap:5px;
+  align-items:center;
+  transition:0.3s;
+
+  color: rgba(255,255,255,.75);
+  padding: .5rem .75rem;
+  position:relative;
+}
+
+a.navlink:hover {
+  color:#fff;
+}
+
+.navlink.is-active {
+  color:#fff;
+}
+
+.v1 {
+  width: 1px;
+  height: 36px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.225) 0%, rgba(255, 255, 255, 0.18) 35.94%, rgba(255, 255, 255, 0.27) 100%);
+  box-shadow: -1px 0px 1px rgba(0, 0, 0, 0.4);
+}
+
+.tile {
+  padding:25px;
+  width:100%;
+  box-sizing:border-box;
+  gap:5px;
+
+  /* From https://css.glass */
+  background: rgba(225, 214, 214, 0.32);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(5px);
+  border: 1px solid rgba(225, 214, 214, 0.3);
+}

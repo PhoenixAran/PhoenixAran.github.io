@@ -23,4 +23,4 @@ function Entity:getInspectorProperties()
 end
 {% endhighlight %}
 
-![Entity Inspector in game screenshot](/assets/images/entity_inspector_preview.png)  
+![Entity Inspector in game screenshot](/assets/images/blog_images/entity_inspector_preview.png)  

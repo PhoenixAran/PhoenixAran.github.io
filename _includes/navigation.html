@@ -1,12 +1,10 @@
-<nav class="navbar" role="navigation" aria-label="main navigation">
-    <div class="navbar-brand">
-        <a class="navbar-item" href="/index.html">
-            <img src="/assets/images/hero.png" alt="Nav Bar Brand Picture">
+<nav class="navbar">
+    {% for item in site.data.navigation %}
+        <a class="navlink{% if page.url == item.link %} is-active{% endif %}" href="{{item.link}}" >
+            {{item.name}}
         </a>
-        {% for item in site.data.navigation %}
-            <a class="navbar-item{% if page.url == item.link %} is-active{% endif %}" href="{{item.link}}" >
-                {{item.name}}
-            </a>
-        {% endfor %}
-    </div>
+        {% if forloop.last == false %}
+            <div class="v1"></div>
+        {% endif %}
+    {% endfor %}
 </nav>
