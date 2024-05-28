@@ -1,12 +1,12 @@
-<nav class="navbar is-success" role="navigation" aria-label="main navigation">
+<nav class="navbar" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
         <a class="navbar-item" href="/index.html">
             <img src="/assets/images/hero.png" alt="Nav Bar Brand Picture">
         </a>
-        {% for item in site.data.navigation %}
-            <a class="navbar-item{% if page.url == item.link %} is-active{% endif %}" href="{{item.link}}" >
-                {{item.name}}
-            </a>
-        {% endfor %}
     </div>
+    {% for item in site.data.navigation %}
+    <a class="navbar-item{% if page.url == item.link %} is-active{% endif %}" href="{{item.link}}" >
+        {{item.name}}
+    </a>
+    {% endfor %}
 </nav>
